@@ -4,7 +4,6 @@ import re
 
 string = "1010010101011110101001" # 
 
-
 class node:
 	a = 0 # inclusive
 	b = 1 # exclusive
@@ -22,26 +21,26 @@ class node:
 		self.repeats = c
 		self.children =[]
 		self.symbol = ""
-	def addChild(self, node):
+	def add_child(self, node):
 		self.children.append(node)
-
-	def setPattern(self, p):
+	def set_pattern(self, p):
 		self.pattern = p
-	def getChildren(self):
+	def get_children(self):
 		return self.children
-	def getNumChildren(self):
+	def get_num_children(self):
 		return len(self.children)
-	def printChildren(self):
+	def print_children(self):
 		for i in range(len(self.children)):
 			print(self.children[i].pattern + " ", end='')
 		print()
-def initializeNodes(string):
+		
+def initialize_nodes(string):
 	nodes = []
 	for i in range(len(string)):
 		nodes.append(node(i, i+1, string[i:i+1], 1 ))
 	return [nodes,""]
 
-def getRepeatingPatternType(node):
+def get_repeating_pattern_type(node):
 	#does a BFS, searching for the pattern which is repeated
 	queue = node.getChildren()
 	while(queue):
@@ -52,7 +51,7 @@ def getRepeatingPatternType(node):
 		for i in range(len(children)):
 			queue.append(children[i])
 
-def mergeNodes(nodes, mergeStart, mergeEnd, symb):
+def merge_nodes(nodes, mergeStart, mergeEnd, symb):
 	pat = ""
 	#print("merging from"+ str(mergeStart) + " to "+ str(mergeEnd))
 	n= node(nodes[mergeStart].a, nodes[mergeEnd].b, "",mergeEnd-mergeStart)
@@ -73,7 +72,7 @@ def mergeNodes(nodes, mergeStart, mergeEnd, symb):
 	#print("children2 " + str(n.getNumChildren()))
 	return n
 
-def mergeTCodes(nodes, string):
+def merge_t_codes(nodes, string):
 	n = len(nodes)
 	if(n==1):
 		return
@@ -122,11 +121,11 @@ def mergeTCodes(nodes, string):
 			ki =0
 
 	return [newNodes, pat]
-def printNodes(nodes):
+def print_nodes(nodes):
 	for i in range(len(nodes)):
 		print(nodes[i].pattern +" ", end='')
 	print()
-def printTCodePattern(tcodes,string):
+def print_t_code_pattern(tcodes,string):
 	#does a BFS, searching for the pattern which is repeated
 	print("printing T code pattern")
 	symbols = tcodes[1]
@@ -154,13 +153,13 @@ def printTCodePattern(tcodes,string):
 	return TCodeComplexity
 
 
-def TCodeItUp(string):
-	n = initializeNodes(string)
+def t_code_it_up(string):
+	n = initialize_nodes(string)
 	symbols = []
 	printNodes(n[0])
 	while(len(n[0])>1):
-		n = mergeTCodes(n[0],string)
-		printNodes(n[0])
+		n = merge_t_codes(n[0],string)
+		print_nodes(n[0])
 		symbols.append(n[1])
 		print("p =" + str(n[1]))
 		print()
@@ -171,9 +170,9 @@ def TCodeItUp(string):
 
 
 string = "0100010101101"
-tcodes = TCodeItUp(string)
+tcodes = t_code_it_up(string)
 
-complexity = printTCodePattern(tcodes,string)
+complexity = print_t_code_pattern(tcodes,string)
 print("\nTCode Complexity =" + str(complexity))
 print("\n")
 
