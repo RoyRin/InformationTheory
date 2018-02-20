@@ -2,6 +2,10 @@ import numpy as np
 
 import re
 
+import numpy as np
+
+import re
+
 string = "1010010101011110101001"  #
 
 
@@ -142,6 +146,7 @@ def print_nodes(nodes):
 def print_t_code_pattern(tcodes, string):
     # does a BFS, searching for the pattern which is repeated
     print("printing T code pattern")
+    exponents = []
     symbols = tcodes[1]
     queue = tcodes[0][0][0].get_children()
     TCodeComplexity = 0
@@ -152,19 +157,21 @@ def print_t_code_pattern(tcodes, string):
     while (queue):
         if (symbolIndex > len(symbols)):
             print(" + " + string[-1:])
-            return TCodeComplexity
+            return [TCodeComplexity, [symbols, exponents]]
         symbol = symbols[-1 * symbolIndex]
         a += 1
         n = queue.pop(0)
         if (n.pattern == symbol):
             print("(" + n.pattern + ")" + "^" + str(n.repeats) + " ", end='')
+            exponents.append(n.repeats)
             symbolIndex += 1
             TCodeComplexity += np.log2(1 + n.repeats)
             continue
         children = n.get_children()
         for i in range(len(children)):
             queue.append(children[i])
-    return TCodeComplexity
+
+    return [TCodeComplexity, [symbols, exponents]]
 
 
 def t_code_it_up(string):
@@ -177,18 +184,72 @@ def t_code_it_up(string):
         symbols.append(n[1])
         print("p =" + str(n[1]))
         print()
+    print(" symbols")
     print(symbols)
     return [n, symbols]
 
 
+def naiveCompression(symbols, string):# this will simply run tcodeitup,
+	# and then iterate through the symbols, left to right
+	for i in range(len(symbols)):
+		print(symbols[len(symbols)-i+1], " ", end = '')
+	for i in range(len(symbols)):
+		print("( " +str(symbols[i].get_num_children())+ " ) ", end = '')
 # n = [list of nodes, pattern] is list of nodes (list of 1 node, really)
 # symbols is list of patterns
 
-if __name__ == '__main__':
-    #string = "0100010101101"
-    string = "01101101011101"
-    tcodes = t_code_it_up(string)
+def generateOrderedString(n):
+	s = ""
+	for i in range(n):
+		for j in range(5):
+			if(i%2 == 0):
+				s += str(1)
+			else:
+				s+=str(0)
+	return s
+def generateRandomString(n):
+	s = ""
+	for i in range(n*5):
+		s+= str(np.random.randint(0,2))
+	return s
 
-    complexity = print_t_code_pattern(tcodes, string)
-    print("\nTCode Complexity =" + str(complexity))
-    print("\n")
+if __name__ == '__main__':
+	#string = "0100010101101"
+	string = "01101101011101"
+	string = generateOrderedString(10)
+	string = generateRandomString(10)
+	tcodes = t_code_it_up(string)
+
+	compression = print_t_code_pattern(tcodes, string)
+	print("\n \n \n here")
+
+	complexity = compression[0]
+	print("\nTCode Complexity =" + str(complexity))
+	print("\n")
+	print(" compression:\n ")
+	size = ""
+	print("dictionary: ",end = '')
+	for i in range(len(compression[1][0])):
+		size+= str(compression[1][0][i])
+		print(str(compression[1][0][i]) +" ",end='')
+	print("exponents:")
+	for i in range(len(compression[1][1])):
+		size+= str(bin(compression[1][1][i]))[2:]
+		print("( " + str(compression[1][1][i]) +" ) ",end='')
+
+	print("compression:")
+	print(size)
+	print(string)
+	print("compression from ", end='')
+	print(len(string), end = '')
+	print(" to ", end = '')
+	print(len(size))
+
+
+
+
+
+
+
+
+
