@@ -110,24 +110,28 @@ class TCode:
 		self.ll = linked_list(string)
 
 	def compress(self):
-		print("size is " +str(self.ll.size))
+		#print("size is " +str(self.ll.size))
 		self.penultimate = self.ll.tail.prev
-		self.exponents.append(self.penultimate.children)
+		#print("index of penultimate: " + str(self.penultimate.ind))
+		self.exponents.append(self.penultimate.children+1)
 		currentP = self.s[self.penultimate.a:self.penultimate.b]
+		#self.exponents.append(penultimate.children)
 		self.symbols.append(currentP)
 		n = self.penultimate
+
 		currentK =0
 
 		while(self.s[n.a:n.b] == currentP):
-			currentK +=1
 			n = n.prev
+			currentK +=1
 			if(n == None):
-				currentK = self.ll.size
 				break
+			
+
 		self.k.append(currentK)
 
 		n = self.ll.head # n is a temp node, which will go forward, looking to merge possible nodes, each round for the given k, p combo
-		print("k is " + str(currentK) + " p is " +str(currentP))
+		#print("k is " + str(currentK) + " p is " +str(currentP))
 		while (n != None):
 			if(self.s[n.a:n.b] != currentP):
 				n = n.next
@@ -141,8 +145,8 @@ class TCode:
 					break
 				kk+=1
 				temp = temp.next
-			print("kk is ", kk)
-			print("n is "+ self.s[n.a:n.b])
+			#print("kk is ", kk)
+			#print("n is "+ self.s[n.a:n.b])
 			for i in range(kk):
 				n.eat_next()
 			self.ll.size = self.ll.size - kk 
@@ -151,22 +155,76 @@ class TCode:
 				self.ll.tail = n
 			n = n.next
 		print("the new size is "+ str(self.ll.size))
+
 	def run_T_codes(self):
+		verbose = False
 		count = 0
 		self.ll.print_listnodes_short()
 		while(self.ll.size >1):
 			count +=1
-			print("compression" + str(count))
+			
 			self.compress()
-			print("nodes:")
-			self.ll.print_listnodes_short()
-		print("symbols and then exponents:")
+			if(verbose):
+				print("compression" + str(count))
+				print("nodes:")
+				self.ll.print_listnodes_short()
+
+		print("K then symbols and then exponents:")
+		self.exponents[-1] -=1
+		print(self.k)
 		print(self.symbols)
 		print(self.exponents)
+		return [ self.k, self.symbols, self.exponents]
 
+	def T_complexity(self):
+		ret = 0.
+		for i in range(len(self.k)):
+			ret += np.log2(1+self.k[i])
+		print("length is "+ str(len(self.k)))
+		return ret
+
+	def printCompression(self):
+		n = len(self.symbols)
+		for i in range(len(self.symbols)):
+			print(" (" +str(self.symbols[n-i-1])+ ")^"+str(self.exponents[n-i-1]), end='')
+		print(" + "+self.s[-1])
+
+	def printCompressionString(self):
+		n = len(self.symbols)
+		comp =""
+		compNoSpace = ""
+		for i in range(len(self.symbols)):
+			comp += str(self.symbols[n-i-1])+"."
+			compNoSpace+=str(self.symbols[n-i-1])
+		comp+=s[-1]+ "!" # symbols, seperated by !, followd by their exponents in binary format
+		for i in range(len(self.symbols)):
+			comp += str(bin(self.exponents[n-i-1]))[2:]+"." # exponents represented in binary
+			compNoSpace += str(bin(self.exponents[n-i-1]))[2:]
+		comp+="!"
+		return [comp, compNoSpace]
+		
+def generateRandomString(n):
+	s = ""
+	for i in range(n*5):
+		s+= str(np.random.randint(0,2))
+	return s
+def generateAll1(n):
+	s = ""
+	for i in range(n*5):
+		s+= str(1)
+	return s
 
 #s = "0123456789"
+
 s= "101101"
+s = "1,10,11,101,1000,1101,10101,100010,110111,1011001"
+s = "1101110110001101101011000101101111011001"
+szartosht = "10011010110111001001101001110101011001010101101100000110100100110100011011001101001011010100101101101011001110100101011010110010100110101001011010100000010001110001001110101010000010010111100010000010110100011001010101101010100000101111"
+s= szartosht
+s= generateRandomString(100)
+#s = "0100010101101"
+#s= szartosht
+#s= generateAll1(100)
 l = linked_list(s)
 #l.print_listnodes()
 
@@ -178,9 +236,15 @@ t = TCode(s)
 #t.compress()
 print("\n \n butts")
 t.run_T_codes()
+print("\n\n\n\n")
 
+t.printCompression()
 
-
+print("t complexity: "+ str(t.T_complexity()) + " ratio per symbol: " +str(t.T_complexity()/len(t.s)*1.) )
+compression = t.printCompressionString()[0]
+print(s)
+print(compression)
+print("compression from "+ str(len(s)) + " to ~" + str(len(compression)))
 
 
 
