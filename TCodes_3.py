@@ -23,11 +23,12 @@ class node: # will take a linked list approach to compression - should be in lin
 	def eat_next(self): # in line merging of the linked list - has one node, absorbs the node to its right
 		if(self.next == None):
 			return
-
+		self.children +=1
 		self.b = self.next.b
-		if(self.next.next == None):
-			self.next = None
+		if(self.next.next == None): # 2nd from the end
+			self.next = None # move to the end, don't set the reverese driection
 			return
+
 		self.next.next.prev = self # se
 		self.next = self.next.next
 		# children need to be set external to this method, because, it is unknown how many eat nexts, will occur
@@ -113,10 +114,10 @@ class TCode:
 		#print("size is " +str(self.ll.size))
 		self.penultimate = self.ll.tail.prev
 		#print("index of penultimate: " + str(self.penultimate.ind))
-		self.exponents.append(self.penultimate.children+1)
+		
 		currentP = self.s[self.penultimate.a:self.penultimate.b]
 		#self.exponents.append(penultimate.children)
-		self.symbols.append(currentP)
+		
 		n = self.penultimate
 
 		currentK =0
@@ -147,17 +148,32 @@ class TCode:
 				temp = temp.next
 			#print("kk is ", kk)
 			#print("n is "+ self.s[n.a:n.b])
+			n.set_children(0)
+			if(kk == 0):
+				print("omg !!!!! kk = 0")
 			for i in range(kk):
 				n.eat_next()
+
 			self.ll.size = self.ll.size - kk 
 			n.set_children(kk)
+
 			if(n.next == None):
 				self.ll.tail = n
 			n = n.next
+
+		self.symbols.append(currentP)
+		print("head children:" + str(self.ll.head.children) + str(self.ll.size))
+		
+		a = 0
+		if(self.ll.size >1):
+			a = self.ll.tail.children
+		else:
+			a = self.ll.head.children
+		self.exponents.append(a)
 		print("the new size is "+ str(self.ll.size))
 
 	def run_T_codes(self):
-		verbose = False
+		verbose = True
 		count = 0
 		self.ll.print_listnodes_short()
 		while(self.ll.size >1):
@@ -170,7 +186,7 @@ class TCode:
 				self.ll.print_listnodes_short()
 
 		print("K then symbols and then exponents:")
-		self.exponents[-1] -=1
+		
 		print(self.k)
 		print(self.symbols)
 		print(self.exponents)
@@ -220,7 +236,8 @@ s= "101101"
 s = "1,10,11,101,1000,1101,10101,100010,110111,1011001"
 s = "1101110110001101101011000101101111011001"
 szartosht = "10011010110111001001101001110101011001010101101100000110100100110100011011001101001011010100101101101011001110100101011010110010100110101001011010100000010001110001001110101010000010010111100010000010110100011001010101101010100000101111"
-s= szartosht
+#s = "1101110101010"
+#s= szartosht
 s= generateRandomString(100)
 #s = "0100010101101"
 #s= szartosht

@@ -224,7 +224,7 @@ if __name__ == '__main__':
 	print("\n \n \n here")
 
 	complexity = compression[0]
-	print("\nTCode Complexity =" + str(complexity))
+	print("\nTCode Complexity =" + str(complexity) + " per bit: "+ str(complexity/len(string)))
 	print("\n")
 	print(" compression:\n ")
 	size = ""
