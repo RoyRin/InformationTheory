@@ -1,8 +1,8 @@
 
-
 import os
 import sys
 import numpy as np
+#note - only works if string is size  r^n for some n
 
 #I optimal I = log log n (n size of string)
 class MPM:
@@ -144,7 +144,14 @@ class MPM:
 			print("level i", str(i), a)
 		return a
 #		print(a)
+	def MPM_Entropy(self):
+		l =0
+		for i in range(len(self.T)):
+			for s in (self.T[i]):
+				l+= len(str(s))
 
+		print("Entropy is " + str(l) + " / "+ str(len(self.x)))
+		return (l/len(self.x))
 if __name__ == '__main__':
 	s = "00100100100000010010000010010010"
 	print(sys.argv)
@@ -163,19 +170,9 @@ if __name__ == '__main__':
 		decoded+=str(i)
 	print(decoded)
 	print(s)
+	e = m.MPM_Entropy()
+	print("Entropy is "+ str(e))
 
-	'''
-	for i in range(len(m.S)):
-		#print(m.U[i])
-		print("S" + str(i))
-		print(m.S[i])
-
-	for i in range(len(m.T)):
-		#print(m.U[i])
-		print("T" + str(i))
-		print(m.T[i])
-
-	'''
 
 
 
