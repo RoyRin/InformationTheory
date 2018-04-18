@@ -4,7 +4,7 @@ import gmpy2
 from gmpy2 import mpz
 from numba import jit
 import os
-
+import sys
 
 def _generate_const_seq(N):
     return np.zeros(N, dtype='uint8')
@@ -297,17 +297,20 @@ def printOut(toFile, text):
 
 
 if __name__ == '__main__':
+    
     r = 2
-    N = r**24 # roughly 2 billion
+    power = int(sys.argv[1])
+    N = r**power # roughly 2 billion
     funcs = [_generate_const_seq, _generate_checkerboard_seq, _generate_random_seq, _generate_rudin_shapiro_seq,
     _generate_thue_morse_seq, _generate_fibonacci_seq, _generate_baum_sweet_seq, 
     _generate_dragon_seq, _generate_ehrenfeucht_mycielski_seq]
     ''', _generate_kolakoski_seq, generate_pi_seq'''
     
     for i in funcs:
-        N = r**19
+        N = r**power
         if(i == _generate_ehrenfeucht_mycielski_seq):
-            N = r**19
+            if(power>19):
+                N = r**19
 
         print(str(i.__name__))
         a = i(N)
@@ -318,7 +321,7 @@ if __name__ == '__main__':
         #print(s)
         print(type(s))
         #string_for_output = s.encode('utf8', 'replace')
-        printOut(str("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+".txt"), s)
+        printOut(str("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+"r_"+str(r)+"to"+str(power)+".txt"), s)
         #printOut("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+".txt", s)
         print("\n")
 

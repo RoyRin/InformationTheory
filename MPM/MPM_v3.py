@@ -128,15 +128,15 @@ def readFile(fn):
 	f = open(fn)
 	#print(f.read())
 	return(f.read())
+
 if __name__ == '__main__':
 	
 	s = "00100100100000010010000010010010"
 	print(sys.argv)
 	if(int(len(sys.argv))>1):
 		s= readFile(sys.argv[1])
-		#s = sys.argv[1]
-	print(s)
-	print(int(np.log2(np.log2(len(s)))) )
+	#print(s)
+	#print(int(np.log2(np.log2(len(s)))) )
 	m = MPM(s,2,10)# string, R, I
 	m.multilevel_decomposition_phase()
 	
@@ -146,11 +146,10 @@ if __name__ == '__main__':
 	
 	for i in decode:
 		decoded+=str(i)
-	#print(decoded)
-	#print(s)
 	if(s != decoded):
-		print("Decoding not the same as original message!")
+		print("Decoding not the same as original message! Problemo")
 	e = m.MPM_Entropy()
+	printOut(sys.argv[1][:-4]+"_Entropy.txt", "Entropy is "+ str(e))
 	print("Entropy is "+ str(e))
 
 	
