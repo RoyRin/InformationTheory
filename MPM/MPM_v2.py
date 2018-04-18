@@ -28,50 +28,31 @@ class MPM:
 		count = 0
 		size = len(self.x)
 		self.I = 1
-		#n = int(len(self.x)/self.r )
-		#self.S.append([self.x[i:i+n] for i in range(0, len(self.x), n)])
-		#for i in range(1, self.I):
 		while(True):
 			size = int(size/self.r)
 			i = self.I
-			print("iterations"+ str(i))
+			#print("iterations"+ str(i))
 			dic = {}
-			#self.U.append[{}]
-			#size = (self.r**(self.I-i))
 			self.U.append([])
-			#self.S.append([])
 			count =0
 			for ii in range( len(self.U[i-1])):
-				#size = int(len(self.U[i-1][0])/self.r)
-				#print(size)
 				for rr in range(self.r):
 					a = self.U[i-1][ii][rr*(size):(rr+1)*(size)]
 					if( a not in dic):
 						dic[a] = count
 						count+=1
 						self.U[i].append(a)
-
-						n = int(len(a)/self.r )
-						#self.S[-1].append([a[i:i+n] for i in range(0, len(a), n)])
-							
-					#for rrr in range(self.r):
-					#	a = self.U[i-1][ii][rrr*(size):(rrr+1)*(size)]
-					#	self.S[i-1].append(a)
-			
+						n = int(len(a)/self.r )	
 			#self.S[-1] = [item for sublist in self.S[-1] for item in sublist] # flatten S into 1 array
-			print("size of 1 unit of U"+ str(len(self.U[-1][0])))
+			#print("size of 1 unit of U"+ str(len(self.U[-1][0])))
 			self.I +=1
 			if(len(self.U[-1][0])== self.r):
 				break
-		
-		
 		for l in range(len(self.U)):
 			self.S.append([])
 			for z in range(len(self.U[l])):
 				n = int(len(self.U[l][z])/self.r )
 				a = [self.U[l][z][i:i+n] for i in range(0, len(self.U[l][z]), n)]
-				#print("n is "+ str(n))
-				#print("a is "+ str(a))
 				self.S[-1].append(a)
 			self.S[-1] = [item for sublist in self.S[-1] for item in sublist] # flatten S into 1 array
 		
@@ -123,25 +104,16 @@ class MPM:
 		return
 	def encoding_phase(self):
 		a = self.T[0]
-		#print(a)
-#		for i in range(1, len(self.T)):
-		print("length of T"+ str(len(self.T)))
 		for i in range(1, self.I): # needs to go to self.I+1	 (otherwise, doesnt' work)	
-			print("iteratopm"+ str(i))	
-			print("a is "+ str(a)+" prior")
-
+		
 			#print("len a ", len(a), "\n")
 			for j in range(len(a)):
-				#print("from ", self.r*a[j], " to ", (1+a[j])*self.r)
 				temp = []
 				for rr in range(self.r):
 					temp.append(self.T[i][(self.r*a[j])+rr])
 				a[j] = temp
-				#a[j] = self.T[i][self.r*a[j]:(a[j]+1)*self.r]
-				#print(a[j])
-			print("a is "+ str(a))
+
 			a = [item for sublist in a for item in sublist] # flatten a
-			print("level i", str(i), a)
 		return a
 #		print(a)
 	def MPM_Entropy(self):
@@ -151,15 +123,21 @@ class MPM:
 				l+= len(str(s))
 
 		print("Entropy is " + str(l) + " / "+ str(len(self.x)))
-		return (l/len(self.x))
+		return (l*1./len(self.x))
+def readFile(fn):
+	f = open(fn)
+	#print(f.read())
+	return(f.read())
 if __name__ == '__main__':
+	
 	s = "00100100100000010010000010010010"
 	print(sys.argv)
 	if(int(len(sys.argv))>1):
-		s = sys.argv[1]
+		s= readFile(sys.argv[1])
+		#s = sys.argv[1]
 	print(s)
 	print(int(np.log2(np.log2(len(s)))) )
-	m = MPM(s,2,5)# string, R, I
+	m = MPM(s,2,10)# string, R, I
 	m.multilevel_decomposition_phase()
 	
 	m.tokenization_phase()
@@ -173,6 +151,7 @@ if __name__ == '__main__':
 	e = m.MPM_Entropy()
 	print("Entropy is "+ str(e))
 
-
+	
+	#
 
 
