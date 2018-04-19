@@ -1,1 +1,1 @@
-Entropy is 0.046875
+Entropy is 48.0 / 1024 : 0.046875Entropy is 48.0 / 1024 : 0.046875

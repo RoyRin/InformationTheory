@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy as np
+
 import gmpy2
 from gmpy2 import mpz
 from numba import jit
@@ -281,6 +282,8 @@ def generate_checker_2d(width, nfields):
     nfields = nfields / 2
     np.kron([[1, 0] * nfields, [0, 1] * nfields] * nfields, np.ones((width, width)))
 
+def generate_random_seq(N):
+    return np.random.randint(2, size=N)
 
 def printOut(toFile, text):
     if os.path.exists(toFile):
@@ -303,13 +306,15 @@ if __name__ == '__main__':
     N = r**power # roughly 2 billion
     funcs = [_generate_const_seq, _generate_checkerboard_seq, _generate_random_seq, _generate_rudin_shapiro_seq,
     _generate_thue_morse_seq, _generate_fibonacci_seq, _generate_baum_sweet_seq, 
-    _generate_dragon_seq, _generate_ehrenfeucht_mycielski_seq]
+    _generate_dragon_seq, _generate_ehrenfeucht_mycielski_seq, generate_random_seq]
     ''', _generate_kolakoski_seq, generate_pi_seq'''
-    
+    #funcs = [generate_random_seq]
     for i in funcs:
         N = r**power
         if(i == _generate_ehrenfeucht_mycielski_seq):
             if(power>19):
+                exit()
+                power = 19
                 N = r**19
 
         print(str(i.__name__))
@@ -321,7 +326,7 @@ if __name__ == '__main__':
         #print(s)
         print(type(s))
         #string_for_output = s.encode('utf8', 'replace')
-        printOut(str("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+"r_"+str(r)+"to"+str(power)+".txt"), s)
+        printOut(str("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+"r_"+str(r)+"to"+str(power).zfill(2)+".txt"), s)
         #printOut("/Users/Roy/Research/Chaikin/InformationTheory/sequences/sequence"+ i.__name__+".txt", s)
         print("\n")
 

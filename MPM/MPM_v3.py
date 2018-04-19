@@ -48,7 +48,7 @@ class MPM:
 			#self.S[-1] = [item for sublist in self.S[-1] for item in sublist] # flatten S into 1 array
 			#print("size of 1 unit of U"+ str(len(self.U[-1][0])))
 			self.I +=1
-			if(len(self.U[-1][0])== self.r):
+			if(len(self.U[-1][0])<= self.r):
 				break
 		for l in range(len(self.U)):
 			self.S.append([])

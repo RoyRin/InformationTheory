@@ -1,1 +1,1 @@
-Entropy is 1.1875
+Entropy is 38.0 / 32 : 1.1875
