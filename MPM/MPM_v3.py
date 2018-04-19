@@ -12,15 +12,17 @@ class MPM:
 	U = []
 	S=[]
 	T = []
-
-	def __init__(self, s, r, i):
+	verbose = False
+	def __init__(self, s, r, i, v = False):
 		self.x = s
 		self.r = r
 		self.I = i
+		self.verbose = v
 
 	#produce S's
 	def multilevel_decomposition_phase(self):
-		print("string is "+self.x)
+		if(self.verbose):
+			print("string is "+self.x)
 		# the sequences S0, S1, ...SI(x) are formed
 		# each s_i consists of nonoverlapping substrings of x of length r^I-i
 		
@@ -73,19 +75,25 @@ class MPM:
 
 	#produce Ts
 	def tokenization_phase(self):
-		print("tokeneizainot phase")
-		print("length of S"+str(len(self.S)))
+
+		if(self.verbose):
+			print("tokeneizainot phase")
+			print("length of S"+str(len(self.S)))
 		for i in range(len(self.S)):
 			self.T.append([])
+			if(i== len(self.S)-1):
+				self.T[i] = self.S[i]
+				break
 			a = {}
 			count = 0
-			print(str(i)+ " ======")
-			print(self.S[i])
+			if(self.verbose):
+				print(str(i)+ " ======")
+				print(self.S[i])
 
 			for s in self.S[i]:
-				print("a is "+str(a))
-				#print(a)
-				#print(s)
+				if(self.verbose):
+					print("a is "+str(a))
+
 				if(s not in a):
 					#print("adding ")
 					a[s] = count
@@ -94,17 +102,18 @@ class MPM:
 				else:
 					#print("DO I EVER GET HERE?")
 					self.T[i].append(a[s])
-			print("should be 0"+ str(len(self.T[i])-len(self.S[i])))
-		print("T's")
-		for i in range(len(self.T)):
-			print(self.S[i])
-			print(self.T[i])
+			if(self.verbose):
+				print("should be 0"+ str(len(self.T[i])-len(self.S[i])))
+		if(self.verbose):
+			print("T's")
+			for i in range(len(self.T)):
+				print(self.S[i])
+				print(self.T[i])
 
-		#print(self.T)
 		return
 	def decoding_phase(self):
 		a = self.T[0]
-		for i in range(1, self.I): # needs to go to self.I+1	 (otherwise, doesnt' work)	
+		for i in range(1, self.I): # needs to go to self.I	 (otherwise, doesnt' work)	
 		
 			#print("len a ", len(a), "\n")
 			for j in range(len(a)):
@@ -121,13 +130,29 @@ class MPM:
 		for i in range(len(self.T)):
 			for s in (self.T[i]):
 				l+= len(str(s))
-
 		print("Entropy is " + str(l) + " / "+ str(len(self.x)))
-		return (l*1./len(self.x))
+		return [l*1.,len(self.x)]
 def readFile(fn):
 	f = open(fn)
 	#print(f.read())
 	return(f.read())
+
+def countDifferences(s1,s2):
+	print("length difference: "+ str(len(s1)- len(s2)))
+	count = 0
+	for i in range(min(len(s1),len(s2))):
+		if(s1[i]!= s2[i]):
+			count+=1
+
+	print("nuber of differences:" + str(count))
+
+def printOut(toFile, text):
+    if os.path.exists(toFile):
+        append_write = 'a' # append if already exists
+    else:
+        append_write = 'w' # make a new file if not
+    with open(toFile, append_write) as f:
+        f.write(text)
 
 if __name__ == '__main__':
 	
@@ -148,11 +173,13 @@ if __name__ == '__main__':
 		decoded+=str(i)
 	if(s != decoded):
 		print("Decoding not the same as original message! Problemo")
-	e = m.MPM_Entropy()
-	printOut(sys.argv[1][:-4]+"_Entropy.txt", "Entropy is "+ str(e))
-	print("Entropy is "+ str(e))
+		print(s)
+		print(decoded)
+		countDifferences(s, decoded)
 
-	
-	#
+	e = m.MPM_Entropy()
+	#printOut(sys.argv[1][:-4]+"_Entropy.txt", "Entropy is "+  str(e[0]) + " / "+ str(e[1]) + " : " +str(e[0]*1./e[1]))
+	#print("Entropy is "+ str(e))
+
 
 
